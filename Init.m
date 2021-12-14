@@ -5,7 +5,7 @@ clc
 source = [0 -100];
 receivers = [100, -50; 100, -100; 100, -150 ; 100, -200];
 h = 200;
-n_s = 50; %amount of computed sources
+n_s = 10; %amount of computed sources
 totalTime = 1.5; % in s
 sampleTime = 0.01;
 a = 10;
@@ -28,7 +28,7 @@ for i =  1 : 1 : size(n_gg_t, 2)
     reverse_source = receivers(i,:);
     reverse_h = h - receivers(i,2);
     reverse_receiver = source;
-    reverse_s_t = n_gg_t{i};
+    reverse_s_t = [n_gg_t{i}(:,1), flipud(n_gg_t{i}(:,2))];
     n_ss_t{i} = sumArrays(fitArrays(recordMultSources(reverse_source, reverse_h, n_s, reverse_receiver, sampleTime, reverse_s_t, c)));
 end
 sr_t =  sumArrays(fitArrays(n_ss_t));
