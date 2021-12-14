@@ -2,11 +2,12 @@ clear variables
 close all
 clc
 
-source = [0 -100];
-receivers = [100, -50; 100, -100; 100, -150 ; 100, -200];
 h = 200;
+source = [0 -100];
+hr = 0 : -10 : -h;
+receivers = [(zeros(size(hr)) + 100)', hr'];
 n_s = 10; %amount of computed sources
-totalTime = 1.5; % in s
+totalTime = 1.51; % in s
 sampleTime = 0.01;
 a = 10;
 freq = 1; %in hz
@@ -22,8 +23,7 @@ plotAll(n_gg_t)
 
 %% back propagation
 function sr_t = getBackPropagation(n_gg_t, receivers, source, sampleTime, n_s, c, h)
-n_ss_t = {};
-disp(size(n_gg_t, 2))
+n_ss_t = {}; 
 for i =  1 : 1 : size(n_gg_t, 2)
     reverse_source = receivers(i,:);
     reverse_h = h - receivers(i,2);
@@ -66,7 +66,7 @@ g_t_0 = [flip(delayedSampleSpace); delayValue];
 s_t_0 = [s_t(:, 1), s_t(:, 2)*(e/ r)];
 g_t = [g_t_0'; s_t_0];
 
-g_t(:,1) =  g_t(:,1) -  g_t(1,1); %adjust delay
+g_t(:,1) =  g_t(:,1) - g_t(1,1); %adjust delay
 end
 
 %% green params computation utils
