@@ -15,19 +15,44 @@ c = 1500;
 s_t = emit(totalTime, sampleTime, @sin, freq, a);
 n_gg_t= fitArrays(getMultipleRecordings(source, h, n_s, receivers, sampleTime, s_t, c));
 sr_t = getBackPropagation(n_gg_t, receivers, source, sampleTime, n_s, c, h);
+disp(size(sr_t))
 plot(sr_t(:,1), sr_t(:,2))
 figure()
 plot(s_t(:,1), s_t(:,2))
 figure()
 plotAll(n_gg_t)
 
+yRange = -(0 : 10 : 100);
+xRange = (0 : 10 : 100);
+
+% test{1} = record(s_t, source, receivers(1,:), c, sampleTime, 1, h);
+% test{2} = record(s_t, source, [100 -100], c, sampleTime, 2, h);
+% t3 = fitArrays(test);
+% plotAll(t3)
+grid = getMultipleBackPropagation(n_gg_t, receivers, sampleTime, n_s, c, h, yRange, xRange);
+figure()
+image(grid,'CDataMapping','scaled')
+colorbar
+
+%% back propagate in multiple points
+function grid = getMultipleBackPropagation(n_gg_t, receivers, sampleTime, n_s, c, h, yRange, xRange)
+ grid = zeros([size(xRange,2) size(yRange,2)]);
+ disp(grid)
+for x = 1 : 1 : size(xRange,2)
+    for y = 1 : 1 : size(yRange,2)
+        sr_t = getBackPropagation(n_gg_t, receivers, [xRange(x) yRange(y)], sampleTime, n_s, c, h);
+        grid(x,y) = sum(sr_t(:,2));
+    end
+end
+end
+
 %% back propagation
-function sr_t = getBackPropagation(n_gg_t, receivers, source, sampleTime, n_s, c, h)
+function sr_t = getBackPropagation(n_gg_t, receivers, atLocation, sampleTime, n_s, c, h)
 n_ss_t = {}; 
 for i =  1 : 1 : size(n_gg_t, 2)
     reverse_source = receivers(i,:);
     reverse_h = h - receivers(i,2);
-    reverse_receiver = source;
+    reverse_receiver = atLocation;
     reverse_s_t = [n_gg_t{i}(:,1), flipud(n_gg_t{i}(:,2))];
     n_ss_t{i} = sumArrays(fitArrays(recordMultSources(reverse_source, reverse_h, n_s, reverse_receiver, sampleTime, reverse_s_t, c)));
 end
@@ -78,7 +103,7 @@ else         % j is odd
 end
 end
 
-function e = getEpsilon(j)
+function e = getEpsilon(j) 
 if ~mod(j,2) % j is even
     e = -1^(j/2);
 else         % j is odd
@@ -96,7 +121,6 @@ for i = 1 : 1 : totalTime / sampleTime
     s_t(i, 1) = sampleSpace(i);
     s_t(i, 2) = propagateWave(func,freqRad, sampleSpace(i), a);
 end
-
 end
 
 function y = propagateWave(func,freq, t, a)
