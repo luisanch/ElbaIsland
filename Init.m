@@ -7,13 +7,13 @@ load('received_signals.mat')
 %% inputs
 h = 150; %distance to ocean floor fromthe surface
 hr = 15 : 15 : h - 15; %z positions of the transceivers
-receivers = [(zeros(size(hr)) + 1100)', hr'];  %array with x,z positions of the transceivers
+receivers = [(zeros(size(hr)))', hr'];  %array with x,z positions of the transceivers
 n_s = 8; %amount of computed sources
 sampleTime = 8.3361e-04; 
 c = 1500; %speed of sound
 resolution = 10; %resolution in meters for back prpagation in selected area
 yRange = (0 : resolution : h);  %vertical range of selected area
-xRange = (0 : resolution : 200);  %horizontal range of selected area
+xRange = (0 : resolution : 1500);  %horizontal range of selected area
 
 %% inputs for simulated signal 
 source = [50 50]; %source loccation
@@ -43,8 +43,8 @@ title("recorded")
 grid = getMultipleBackPropagation(n_gg_t, receivers, sampleTime, n_s, c, h, yRange, xRange);
 figure()
 image(grid,'CDataMapping','scaled') 
-xticklabels((xticks*resolution)-resolution+xRange(1)) 
-yticklabels((yticks*resolution)-resolution+yRange(1))
+xticklabels((xticks*resolution)) 
+yticklabels((yticks*resolution))
 colorbar
 
 %% back propagate in multiple points
