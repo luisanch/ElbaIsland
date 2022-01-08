@@ -44,7 +44,7 @@ grid = getMultipleBackPropagation(n_gg_t, receivers, sampleTime, n_s, c, h, yRan
 figure()
 image(grid,'CDataMapping','scaled') 
 xticklabels((xticks*resolution)-resolution+xRange(1))%plot axes will be messed up resolutions lower to 1 
-yticklabels((yticks*resolution)-resolution+xRange(1))%plot axes will be messed up resolutions lower to 1
+yticklabels((yticks*resolution)-resolution+yRange(1))%plot axes will be messed up resolutions lower to 1
 colorbar
 
 %% back propagate in multiple points
